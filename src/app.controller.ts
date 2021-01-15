@@ -1,12 +1,20 @@
-import { Controller, Get } from '@nestjs/common';
+import { Controller, Get, Render } from '@nestjs/common';
 import { AppService } from './app.service';
+import { ProductsService } from './products/products.service';
 
 @Controller()
 export class AppController {
-  constructor(private readonly appService: AppService) {}
+  constructor(
+    private readonly appService: AppService,
+    private readonly productsService: ProductsService,
+  ) {}
 
   @Get()
-  getHello(): string {
-    return this.appService.getHello();
+  @Render('index')
+  async render() {
+    return {
+      products: await this.productsService.getLatestProducts(0, 10),
+      test: [1, 2, 3, 4, 5, 6],
+    };
   }
 }
