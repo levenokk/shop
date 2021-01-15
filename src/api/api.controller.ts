@@ -14,7 +14,7 @@ import { TransformInterceptor } from './interceptors/transform.interceptor';
 import { СreateProductDto } from '../products/dto/create-product.dto';
 import { ValidationPipe } from './pipes/validation.pipe';
 import { TimeoutInterceptor } from './interceptors/timeout.interceptor';
-import { BadValidationException } from "./errors/bad-validation.exception";
+import { BadValidationException } from './errors/bad-validation.exception';
 
 @Controller('api')
 @UseInterceptors(TimeoutInterceptor)
