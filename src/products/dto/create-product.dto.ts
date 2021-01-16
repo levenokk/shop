@@ -3,8 +3,23 @@ import {
   IsInt,
   IsNotEmpty,
   IsMongoId,
-  IsOptional, IsBoolean,
+  IsOptional,
+  IsBoolean,
+  ValidateNested,
+  IsDefined,
+  IsNotEmptyObject,
 } from 'class-validator';
+import { Type } from 'class-transformer';
+
+export class Image {
+  @IsString()
+  @IsNotEmpty()
+  src: string;
+
+  @IsString()
+  @IsNotEmpty()
+  alt: string;
+}
 
 export class СreateProductDto {
   @IsString()
@@ -15,13 +30,15 @@ export class СreateProductDto {
   @IsNotEmpty()
   price: number;
 
-  @IsMongoId()
-  @IsOptional()
-  category: string;
-
   @IsString()
   @IsNotEmpty()
-  image: string;
+  category: string;
+
+  @IsDefined()
+  @IsNotEmptyObject()
+  @ValidateNested()
+  @Type(() => Image)
+  image: Image;
 
   @IsBoolean()
   @IsOptional()
