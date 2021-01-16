@@ -106,7 +106,7 @@
 					</div>
 					<div class="pi-text">
 						<h6><%= product.price %></h6>
-						<p><%= product.title %> </p>
+						<p><a href="/product?product=<%= product.productId %>&category=<%= product.category %>"><%= product.title %></a></p>
 					</div>
 				</div>
 
@@ -128,10 +128,10 @@
 				<h2>ПОСМОТРИТЕ ЛУЧШИЕ ПРОДАЖИ ТОВАРОВ</h2>
 			</div>
 			<ul class="product-filter-menu">
-				<li><a href="#">Все</a></li>
+				<li><a href="#" @click.prevent="fetchData()">Все</a></li>
 				<% categories.forEach(function(category){%>
 
-					<li><a href="#"><%- category.title %></a></li>
+					<li><a href="#" @click.prevent="fetchData('<%= category.title %>')"><%= category.title %></a></li>
 
 				<%}) %>
 			</ul>
@@ -157,7 +157,7 @@
 
 			</div>
 			<div class="text-center pt-5">
-				<button class="site-btn sb-line sb-dark">LOAD MORE</button>
+				<button class="site-btn sb-line sb-dark" v-if="loadBtn" @click="loadMore">LOAD MORE</button>
 			</div>
 		</div>
 	</section>
@@ -183,7 +183,46 @@
 new Vue({
 	el: "#product-filter-section",
 	data: {
-		items: [<%- products %>]
+		items: [<%- products %>],
+		from: 0,
+		to: 8,
+		category: "",
+		loadBtn: true
+	},
+	methods: {
+		async fetchData(category = ""){
+			this.category = category;
+			this.from = 0;
+			this.to = 8;
+			this.loadBtn = true;
+
+			const posts = await fetch(`http://localhost:3000/api/products?category=${category}&from=0&to=8`)
+			const {data} = await posts.json()
+
+			if(data.length != 8) {
+				this.loadBtn = false
+			}
+
+			this.items = data
+		},
+		async loadMore(){
+			this.from = this.to;
+			this.to += 8;
+
+			const posts = await fetch(`http://localhost:3000/api/products?category=${this.category}&from=${this.from}&to=${this.to}`)
+			const {data} = await posts.json()
+
+			if(data.length != 8) {
+				this.loadBtn = false
+			}
+
+			this.items.push(...data)
+		},
+	},
+	mounted: function(){
+		if(this.items.length != 8){
+			this.loadBtn = false
+		}
 	}
 })
 </script>

@@ -45,6 +45,14 @@ export class ApiController {
     return this.productsService.getProducts(categoryName, from, to);
   }
 
+  @Get('product')
+  @UseInterceptors(new TransformInterceptor())
+  getProduct(
+    @Query('id', new ValidationPipe(), new ParseIntPipe()) id: number,
+  ) {
+    return this.productsService.getProduct(id) || {};
+  }
+
   @Post('createProduct')
   @UseInterceptors(new TransformInterceptor())
   @UseFilters(new BadValidationException())

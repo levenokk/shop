@@ -40,10 +40,23 @@ export class ProductsService {
         price: 1,
         productId: 1,
         newProduct: 1,
+        category: 1,
         _id: 0,
       })
       .skip(from)
       .limit(to);
+  }
+
+  async getProduct(id: number) {
+    return this.productModel.findOne({ productId: id }).select({
+      image: 1,
+      title: 1,
+      price: 1,
+      productId: 1,
+      newProduct: 1,
+      category: 1,
+      _id: 0,
+    });
   }
 
   getLatestProducts(from: number, to: number) {
