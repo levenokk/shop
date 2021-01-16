@@ -14,7 +14,6 @@ export class AppController {
   async render() {
     return {
       products: await this.productsService.getLatestProducts(0, 10),
-      test: [1, 2, 3, 4, 5, 6],
     };
   }
 }

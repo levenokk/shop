@@ -17,6 +17,9 @@ export class Product {
 
   @Prop()
   image: string;
+
+  @Prop({ default: true })
+  newProduct: boolean;
 }
 
 export const ProductSchema = SchemaFactory.createForClass(Product);

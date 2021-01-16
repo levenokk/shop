@@ -3,7 +3,7 @@ import {
   IsInt,
   IsNotEmpty,
   IsMongoId,
-  IsOptional,
+  IsOptional, IsBoolean,
 } from 'class-validator';
 
 export class СreateProductDto {
@@ -22,4 +22,8 @@ export class СreateProductDto {
   @IsString()
   @IsNotEmpty()
   image: string;
+
+  @IsBoolean()
+  @IsOptional()
+  newProduct: boolean;
 }

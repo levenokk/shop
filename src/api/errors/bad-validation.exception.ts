@@ -16,8 +16,7 @@ export class BadValidationException implements ExceptionFilter {
 
     response.status(status).json({
       statusCode: status,
-      message: 'Validation failed',
-      data: exception.message,
+      message: exception.message,
     });
   }
 }
