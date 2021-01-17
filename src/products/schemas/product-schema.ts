@@ -15,13 +15,21 @@ export class Product {
   @Prop({ type: Types.ObjectId, ref: 'Category', default: null })
   category: Category;
 
+  @Prop([
+    raw({
+      src: { type: String },
+      alt: { type: String },
+    }),
+  ])
+  images: Record<string, any>[];
+
   @Prop(
     raw({
       src: { type: String },
       alt: { type: String },
     }),
   )
-  image: Record<string, any>;
+  activeImage: Record<string, any>;
 
   @Prop({ default: true })
   newProduct: boolean;

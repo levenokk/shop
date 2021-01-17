@@ -12,51 +12,34 @@ export class ProductsService {
     private readonly categoryService: CategoryService,
   ) {}
 
+  private readonly select = {
+    images: 1,
+    activeImage: 1,
+    title: 1,
+    price: 1,
+    productId: 1,
+    newProduct: 1,
+    _id: 0,
+  };
+
   async getProducts(categoryName: string, from: number, to: number) {
     if (categoryName.length) {
       const category = await this.categoryService
         .getCategory(categoryName)
         .populate({
           path: 'items',
-          select: {
-            image: 1,
-            title: 1,
-            price: 1,
-            productId: 1,
-            newProduct: 1,
-            _id: 0,
-          },
-        })
-        .skip(from)
-        .limit(to);
+          select: this.select,
+          skip: from,
+          limit: to,
+        });
 
       return category ? category.items : [];
     }
-    return this.productModel
-      .find()
-      .select({
-        image: 1,
-        title: 1,
-        price: 1,
-        productId: 1,
-        newProduct: 1,
-        category: 1,
-        _id: 0,
-      })
-      .skip(from)
-      .limit(to);
+    return this.productModel.find().select(this.select).skip(from).limit(to);
   }
 
   async getProduct(id: number) {
-    return this.productModel.findOne({ productId: id }).select({
-      image: 1,
-      title: 1,
-      price: 1,
-      productId: 1,
-      newProduct: 1,
-      category: 1,
-      _id: 0,
-    });
+    return this.productModel.findOne({ productId: id }).select(this.select);
   }
 
   getLatestProducts(from: number, to: number) {

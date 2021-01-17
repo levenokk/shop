@@ -98,7 +98,7 @@
 						<% if(product.newProduct){ %>
 							<div class="tag-new">new</div>
 						<% } %>
-						<img src="<%= product.image.src %>" alt="<%= product.image.alt %>">
+						<img src="<%= product.activeImage.src %>" alt="<%= product.activeImage.alt %>">
 						<div class="pi-links">
 							<a href="#" data-product="<%= product.productId %>" class="add-card"><i class="flaticon-bag"></i><span>ADD TO CART</span></a>
 							<a href="#" class="wishlist-btn"><i class="flaticon-heart"></i></a>
@@ -141,7 +141,7 @@
 						<div class="product-item">
 							<div class="pi-pic">
 								<div class="tag-new" v-if="item.newProduct">new</div>
-								<img :src="item.image.src" :alt="item.image.alt" />
+								<img :src="item.activeImage.src" :alt="item.activeImage.alt" />
 								<div class="pi-links">
 									<a href="#" class="add-card"><i class="flaticon-bag"></i><span>ADD TO CART</span></a>
 									<a href="#" class="wishlist-btn"><i class="flaticon-heart"></i></a>
@@ -149,7 +149,7 @@
 							</div>
 							<div class="pi-text">
 								<h6>{{ item.price }}</h6>
-								<p>{{ item.title }}</p>
+								<p><a :href="'/product?product='+item.productId+'&category='+item.category"> {{ item.title }}</a></p>
 							</div>
 						</div>
 					</div>
@@ -183,7 +183,7 @@
 new Vue({
 	el: "#product-filter-section",
 	data: {
-		items: [<%- products %>],
+		items: [],
 		from: 0,
 		to: 8,
 		category: "",
@@ -198,8 +198,7 @@ new Vue({
 
 			const posts = await fetch(`http://localhost:3000/api/products?category=${category}&from=0&to=8`)
 			const {data} = await posts.json()
-
-			if(data.length != 8) {
+			if(data.length !== 8) {
 				this.loadBtn = false
 			}
 
@@ -212,17 +211,22 @@ new Vue({
 			const posts = await fetch(`http://localhost:3000/api/products?category=${this.category}&from=${this.from}&to=${this.to}`)
 			const {data} = await posts.json()
 
-			if(data.length != 8) {
+			if(data.length !== 8) {
 				this.loadBtn = false
 			}
 
 			this.items.push(...data)
 		},
 	},
-	mounted: function(){
-		if(this.items.length != 8){
+	mounted: async function(){
+		const posts =await fetch('http://localhost:3000/api/products')
+		const {data} = await  posts.json()
+
+		if(data.length !== 8){
 			this.loadBtn = false
 		}
+
+		this.items = data;
 	}
 })
 </script>

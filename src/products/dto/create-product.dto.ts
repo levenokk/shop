@@ -8,6 +8,8 @@ import {
   ValidateNested,
   IsDefined,
   IsNotEmptyObject,
+  ArrayMinSize,
+  IsArray,
 } from 'class-validator';
 import { Type } from 'class-transformer';
 
@@ -34,11 +36,17 @@ export class СreateProductDto {
   @IsNotEmpty()
   category: string;
 
+  @IsArray()
+  @ValidateNested({ each: true })
+  @ArrayMinSize(1)
+  @ValidateNested()
+  images: Image[];
+
   @IsDefined()
   @IsNotEmptyObject()
   @ValidateNested()
   @Type(() => Image)
-  image: Image;
+  activeImage: Image;
 
   @IsBoolean()
   @IsOptional()
