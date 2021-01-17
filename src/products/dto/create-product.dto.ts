@@ -10,6 +10,8 @@ import {
   IsNotEmptyObject,
   ArrayMinSize,
   IsArray,
+  isArray,
+  IsNumber,
 } from 'class-validator';
 import { Type } from 'class-transformer';
 
@@ -28,7 +30,7 @@ export class СreateProductDto {
   @IsNotEmpty()
   title: string;
 
-  @IsInt()
+  @IsNumber()
   @IsNotEmpty()
   price: number;
 
@@ -51,4 +53,28 @@ export class СreateProductDto {
   @IsBoolean()
   @IsOptional()
   newProduct: boolean;
+
+  @IsNumber({}, { each: true })
+  @ArrayMinSize(1)
+  sizes: number[];
+
+  @IsString()
+  @IsNotEmpty()
+  information: string;
+
+  @IsString()
+  @IsNotEmpty()
+  careDetail: string;
+
+  @IsString()
+  @IsNotEmpty()
+  delivery: string;
+
+  @IsNumber()
+  @IsOptional()
+  rating: number;
+
+  @IsBoolean()
+  @IsOptional()
+  have: boolean
 }

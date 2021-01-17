@@ -6,6 +6,7 @@ import {
   ParseIntPipe,
   Post,
   Query,
+  Session,
   UseFilters,
   UseInterceptors,
 } from '@nestjs/common';
@@ -67,6 +68,22 @@ export class ApiController {
   @UseFilters(new BadValidationException())
   getCategories() {
     return this.categoryService.getCategories();
+  }
+
+  @Post('/addToBacket')
+  @UseFilters(new BadValidationException())
+  addToBacket(
+    @Session() session: Record<string, any>,
+    @Body() id: number,
+    @Body() count: number,
+  ) {
+    if (!session.items) {
+      session.items = [];
+    }
+
+    session.items.push({ id, count });
+
+    return session.items;
   }
 
   @Post('createCategory')

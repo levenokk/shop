@@ -36,6 +36,24 @@ export class Product {
 
   @Prop({ default: 0 })
   like: number;
+
+  @Prop({ required: true })
+  sizes: number[];
+
+  @Prop({ required: true })
+  information: string;
+
+  @Prop({ required: true })
+  careDetail: string;
+
+  @Prop({ required: true })
+  delivery: string;
+
+  @Prop({ default: 0 })
+  rating: number;
+
+  @Prop({ default: true })
+  have: boolean;
 }
 
 export const ProductSchema = SchemaFactory.createForClass(Product);

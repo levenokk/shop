@@ -20,6 +20,12 @@ export class ProductsService {
     productId: 1,
     newProduct: 1,
     _id: 0,
+    information: 1,
+    careDetail: 1,
+    delivery: 1,
+    sizes: 1,
+    rating: 1,
+    have: 1,
   };
 
   async getProducts(categoryName: string, from: number, to: number) {
@@ -66,4 +72,5 @@ export class ProductsService {
 
     return product;
   }
+
 }

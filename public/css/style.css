@@ -140,6 +140,11 @@ ol {
 	text-align: center;
 }
 
+.site-btn.disabled {
+	opacity: .4;
+	cursor: default;
+}
+
 .site-btn:hover {
 	color: #fff;
 }
