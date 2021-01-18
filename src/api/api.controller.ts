@@ -87,18 +87,14 @@ export class ApiController {
     @Body() count: number,
   ) {
     if (!session.items) {
-      session.items = [];
+      session.items = {};
     }
 
     await session.items.push({ id, count });
 
-    return session.items;
-  }
-
-  @Get('hello')
-  getHello(@Session() session: Record<string, any>) {
-    session.views = (session.views || 0) + 1;
-    return session.views;
+    return {
+      ok: true,
+    };
   }
 
   @Post('createCategory')
