@@ -5,8 +5,8 @@ import { ProductsModule } from './products/products.module';
 import { MongooseModule } from '@nestjs/mongoose';
 import { ApiModule } from './api/api.module';
 import { CategoryModule } from './category/category.module';
-import { SessionModule } from './session/session.module';
-import { RedisModule } from './redis/redis.module';
+import { Session } from './session/session.module';
+import { ConfigModule } from './config/config.module';
 
 @Module({
   imports: [
@@ -14,8 +14,8 @@ import { RedisModule } from './redis/redis.module';
     MongooseModule.forRoot('mongodb://localhost:27017/shop'),
     ApiModule,
     CategoryModule,
-    SessionModule,
-    RedisModule,
+    Session,
+    ConfigModule,
   ],
   controllers: [AppController],
   providers: [AppService],

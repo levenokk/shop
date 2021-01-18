@@ -26,6 +26,7 @@ export class ProductsService {
     sizes: 1,
     rating: 1,
     have: 1,
+    category: 1,
   };
 
   async getProducts(categoryName: string, from: number, to: number) {
@@ -56,6 +57,23 @@ export class ProductsService {
     });
   }
 
+  getRecommendation(category, productId = 0) {
+    return this.productModel.aggregate([
+      {
+        $match: {
+          category,
+          have: true,
+          productId: {
+            $ne: productId,
+          },
+        },
+      },
+      {
+        $sample: { size: 10 },
+      },
+    ]);
+  }
+
   async createProduct(body: СreateProductDto): Promise<ProductDocument> {
     const category = await this.categoryService.getCategory(body.category);
 
@@ -72,5 +90,4 @@ export class ProductsService {
 
     return product;
   }
-
 }

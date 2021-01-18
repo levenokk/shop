@@ -1,13 +1,30 @@
-import { Controller, Get, Render } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  ParseIntPipe,
+  Query,
+  Render,
+  ValidationPipe,
+} from '@nestjs/common';
 import { ProductsService } from './products.service';
 
-@Controller('product')
+@Controller()
 export class ProductsController {
   constructor(private readonly productsService: ProductsService) {}
 
-  @Get()
+  @Get('product')
   @Render('product')
-  render() {
-    return {};
+  async renderProduct(
+    @Query('product', new ValidationPipe(), new ParseIntPipe())
+    productId: number,
+    @Query('category', new ValidationPipe()) category: string,
+  ) {
+    return {
+      product: await this.productsService.getProduct(productId),
+      recommendation: await this.productsService.getRecommendation(
+        category,
+        productId,
+      ),
+    };
   }
 }

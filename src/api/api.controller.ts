@@ -36,6 +36,15 @@ export class ApiController {
     return this.productsService.getLatestProducts(from, to);
   }
 
+  @Get('recommendations')
+  @UseInterceptors(new TransformInterceptor())
+  getRecommendations(
+    @Query('category', new ValidationPipe()) category: string,
+    @Query('product', new ValidationPipe()) productId: number,
+  ) {
+    return this.productsService.getRecommendation(category, productId);
+  }
+
   @Get('products')
   @UseInterceptors(new TransformInterceptor())
   getProducts(
@@ -72,18 +81,25 @@ export class ApiController {
 
   @Post('/addToBacket')
   @UseFilters(new BadValidationException())
-  addToBacket(
+  async addToBacket(
     @Session() session: Record<string, any>,
     @Body() id: number,
     @Body() count: number,
   ) {
+
     if (!session.items) {
       session.items = [];
     }
 
-    session.items.push({ id, count });
+    await session.items.push({ id, count });
 
     return session.items;
+  }
+
+  @Get('hello')
+  getHello(@Session() session: { views?: number }) {
+    session.views = (session.views || 0) + 1;
+    return session.views;
   }
 
   @Post('createCategory')

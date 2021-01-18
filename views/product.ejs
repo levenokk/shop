@@ -27,9 +27,8 @@
 					<div class="product-thumbs" tabindex="1" style="overflow: hidden; outline: none;">
 
 						<div class="product-thumbs-track">
-							<div class="pt active" data-imgbigurl="<%= product.activeImage.src %>"><img src="<%= product.activeImage.src %>" alt="<%= product.activeImage.alt %>"></div>
-							<% product.images.forEach(function(image) {  %>
-								<div class="pt" data-imgbigurl="<%= image.src %>"><img src="<%= image.src %>" alt="<%= image.alt %>"></div>
+							<% product.images.forEach(function(image, index) {  %>
+								<div class="pt <%- index == 0 && 'active' %>" data-imgbigurl="<%= image.src %>"><img src="<%= image.src %>" alt="<%= image.alt %>"></div>
 							<% }) %>
 						</div>
 
@@ -115,75 +114,26 @@
 	<section class="related-product-section">
 		<div class="container">
 			<div class="section-title">
-				<h2>RELATED PRODUCTS</h2>
+				<h2>СОПУТСТВУЮЩИЕ ТОВАРЫ</h2>
 			</div>
 			<div class="product-slider owl-carousel">
-				<div class="product-item">
-					<div class="pi-pic">
-						<img src="../public/img/product/1.jpg" alt="">
-						<div class="pi-links">
-							<a href="#" class="add-card"><i class="flaticon-bag"></i><span>ADD TO CART</span></a>
-							<a href="#" class="wishlist-btn"><i class="flaticon-heart"></i></a>
-						</div>
-					</div>
-					<div class="pi-text">
-						<h6>$35,00</h6>
-						<p>Flamboyant Pink Top </p>
-					</div>
-				</div>
-				<div class="product-item">
-					<div class="pi-pic">
-						<div class="tag-new">New</div>
-						<img src="../public/img/product/2.jpg" alt="">
-						<div class="pi-links">
-							<a href="#" class="add-card"><i class="flaticon-bag"></i><span>ADD TO CART</span></a>
-							<a href="#" class="wishlist-btn"><i class="flaticon-heart"></i></a>
-						</div>
-					</div>
-					<div class="pi-text">
-						<h6>$35,00</h6>
-						<p>Black and White Stripes Dress</p>
-					</div>
-				</div>
-				<div class="product-item">
-					<div class="pi-pic">
-						<img src="../public/img/product/3.jpg" alt="">
-						<div class="pi-links">
-							<a href="#" class="add-card"><i class="flaticon-bag"></i><span>ADD TO CART</span></a>
-							<a href="#" class="wishlist-btn"><i class="flaticon-heart"></i></a>
-						</div>
-					</div>
-					<div class="pi-text">
-						<h6>$35,00</h6>
-						<p>Flamboyant Pink Top </p>
-					</div>
-				</div>
-				<div class="product-item">
+				<% recommendation.forEach(function(item){ %>
+
+					<div class="product-item">
 						<div class="pi-pic">
-							<img src="../public/img/product/4.jpg" alt="">
+							<img src="<%= item.activeImage.src %>" alt="<%= item.activeImage.alt %>">
 							<div class="pi-links">
 								<a href="#" class="add-card"><i class="flaticon-bag"></i><span>ADD TO CART</span></a>
 								<a href="#" class="wishlist-btn"><i class="flaticon-heart"></i></a>
 							</div>
 						</div>
 						<div class="pi-text">
-							<h6>$35,00</h6>
-							<p>Flamboyant Pink Top </p>
+							<h6>$<%= item.price %></h6>
+							<p><a href="/product?product=<%= item.productId %>&category=<%= item.category %>"><%= item.title %></a></p>
 						</div>
 					</div>
-				<div class="product-item">
-					<div class="pi-pic">
-						<img src="../public/img/product/6.jpg" alt="">
-						<div class="pi-links">
-							<a href="#" class="add-card"><i class="flaticon-bag"></i><span>ADD TO CART</span></a>
-							<a href="#" class="wishlist-btn"><i class="flaticon-heart"></i></a>
-						</div>
-					</div>
-					<div class="pi-text">
-						<h6>$35,00</h6>
-						<p>Flamboyant Pink Top </p>
-					</div>
-				</div>
+
+				<% }) %>
 			</div>
 		</div>
 	</section>
