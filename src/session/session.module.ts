@@ -1,25 +1,25 @@
-import * as ConnectRedis from 'connect-redis';
-import * as session from 'express-session';
-import { RedisService } from 'nestjs-redis/dist';
 import { NestSessionOptions, SessionModule } from 'nestjs-session';
 import { ConfigModule } from '../config/config.module';
 import { ConfigService } from '../config/config.service';
-import { Redis } from '../redis/redis.module';
+import { getConnectionToken } from '@nestjs/mongoose';
+import { Connection } from 'mongoose';
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const session = require('express-session');
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const connectMongo = require('connect-mongo');
 
-const RedisStore = ConnectRedis(session);
+const MongoStore = connectMongo(session);
 
 export const Session = SessionModule.forRootAsync({
-  imports: [Redis, ConfigModule],
-  inject: [RedisService, ConfigService],
+  imports: [ConfigModule],
+  inject: [ConfigService, getConnectionToken()],
   useFactory: (
-    redisService: RedisService,
     config: ConfigService,
+    connection: Connection,
   ): NestSessionOptions => {
-    const redisClient = redisService.getClient();
-    const store = new RedisStore({ client: redisClient as any });
     return {
       session: {
-        store,
+        store: new MongoStore({ mongooseConnection: connection }),
         secret: config.SESSION_SECRET,
       },
     };

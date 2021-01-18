@@ -86,7 +86,6 @@ export class ApiController {
     @Body() id: number,
     @Body() count: number,
   ) {
-
     if (!session.items) {
       session.items = [];
     }
@@ -97,7 +96,7 @@ export class ApiController {
   }
 
   @Get('hello')
-  getHello(@Session() session: { views?: number }) {
+  getHello(@Session() session: Record<string, any>) {
     session.views = (session.views || 0) + 1;
     return session.views;
   }

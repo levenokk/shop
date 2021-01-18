@@ -6,16 +6,17 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { ApiModule } from './api/api.module';
 import { CategoryModule } from './category/category.module';
 import { Session } from './session/session.module';
-import { ConfigModule } from './config/config.module';
 
 @Module({
   imports: [
     ProductsModule,
-    MongooseModule.forRoot('mongodb://localhost:27017/shop'),
+    MongooseModule.forRoot('mongodb://localhost:27017/shop', {
+      useCreateIndex: true,
+      useNewUrlParser: true,
+    }),
     ApiModule,
     CategoryModule,
     Session,
-    ConfigModule,
   ],
   controllers: [AppController],
   providers: [AppService],
