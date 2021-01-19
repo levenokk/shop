@@ -13,6 +13,19 @@ type matchType = {
   category?: string;
 };
 
+type backetSessionType = {
+  [key: number]: {
+    [key: number]: {
+      count: number;
+      size: number;
+    };
+  };
+};
+
+interface productWithId extends Product {
+  productId: number;
+}
+
 @Injectable()
 export class ProductsService {
   constructor(
@@ -102,5 +115,25 @@ export class ProductsService {
     await category.save();
 
     return product;
+  }
+
+  async getBasketItems(sessionItems: backetSessionType) {
+    const products = Object.keys(sessionItems).map((item) => +item);
+    const items: Product[] = await this.productModel
+      .find({
+        $or: [
+          {
+            productId: products,
+          },
+        ],
+      })
+      .select('title price productId');
+
+    const concatItems = Object.entries(sessionItems).map((item) => {
+      const product = items.find((i: productWithId) => i.productId === +item[0]);
+      console.log(item)
+    });
+
+    return;
   }
 }

@@ -56,4 +56,4 @@ export class Product {
   have: boolean;
 }
 
-export const  ProductSchema = SchemaFactory.createForClass(Product);
+export const ProductSchema = SchemaFactory.createForClass(Product);

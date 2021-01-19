@@ -3,6 +3,11 @@ import { AppService } from './app.service';
 import { ProductsService } from './products/products.service';
 import { CategoryService } from './category/category.service';
 
+export type controllerType = {
+  title: string;
+  basket: number;
+};
+
 @Controller()
 export class AppController {
   constructor(

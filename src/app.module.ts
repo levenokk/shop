@@ -6,6 +6,7 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { ApiModule } from './api/api.module';
 import { CategoryModule } from './category/category.module';
 import { Session } from './session/session.module';
+import { BasketModule } from './basket/basket.module';
 
 @Module({
   imports: [
@@ -17,6 +18,7 @@ import { Session } from './session/session.module';
     ApiModule,
     CategoryModule,
     Session,
+    BasketModule,
   ],
   controllers: [AppController],
   providers: [AppService],
