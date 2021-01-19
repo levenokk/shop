@@ -88,12 +88,13 @@ export class ApiController {
     @Body(new ValidationPipe()) body: AddBucketDto,
   ) {
     const { productId, size, count } = body;
-
+    let isNew = true;
     if (!session.items) {
       session.items = {};
     }
 
     if (session.items[productId]) {
+      isNew = false;
       session.items[productId] = {
         ...session.items[productId],
         [size]: {
@@ -110,7 +111,10 @@ export class ApiController {
       };
     }
 
-    return session.items;
+    return {
+      ok: true,
+      isNew,
+    };
   }
 
   @Post('createCategory')

@@ -4,12 +4,12 @@ import {
   Get,
   ParseIntPipe,
   Query,
-  Res,
+  Req,
+  Res, Session,
   UseFilters,
 } from '@nestjs/common';
 import { ProductsService } from './products.service';
 import { Response } from 'express';
-import { ValidationPipe } from '../api/pipes/validation.pipe';
 import { BadRequestExceptionFilter } from './filters/bad-request-exception.filter';
 
 @Controller()
@@ -23,10 +23,12 @@ export class ProductsController {
     productId: number,
     @Query('category', new DefaultValuePipe(null)) category: string | null,
     @Res() res: Response,
+    @Session() session: Record<string, any>,
   ) {
     if (!productId) {
       return res.render('404', {
         title: 'Divisima | запись не найдена',
+        basket: session.items ? Object.keys(session.items).length : 0,
       });
     }
 
@@ -35,6 +37,7 @@ export class ProductsController {
     if (!product) {
       return res.render('404', {
         title: 'Divisima | запись не найдена',
+        basket: session.items ? Object.keys(session.items).length : 0,
       });
     }
 
@@ -47,6 +50,7 @@ export class ProductsController {
       product,
       recommendation,
       title: 'Divisima | ' + product.title,
+      basket: session.items ? Object.keys(session.items).length : 0,
     });
   }
 }
