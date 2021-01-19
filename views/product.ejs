@@ -48,10 +48,9 @@
 					</div>
 					<div class="fw-size-choose">
 						<p>Размер</p>
-						<% product.sizes.forEach(function(size) { %>
-
+						<% product.sizes.forEach(function(size, index) { %>
 							<div class="sc-item">
-								<input type="radio" name="sc" id="size-<%= size %>">
+								<input type="radio" name="sc" value="<%= size %>" <%- index === 0 && 'checked' %> id="size-<%= size %>">
 								<label for="size-<%= size %>"><%= size %></label>
 							</div>
 
@@ -60,7 +59,7 @@
 					</div>
 					<div class="quantity">
 						<p>КОЛИЧЕСТВО</p>
-                        <div class="pro-qty"><input type="text" value="1"></div>
+                        <div class="pro-qty"><input type="text" name="count" value="1"></div>
                     </div>
 					<button class="site-btn <%- !product.have && "disabled" %>" data-product="<%- product.productId %>">Купить сейчас</button>
 					<div id="accordion" class="accordion-area">
@@ -144,12 +143,28 @@
 
 
 	document.querySelector('.site-btn').addEventListener('click', function(e){
-		fetch('http://localhost:3000/api/addToBacket', {
+		let size, count, productId;
+
+		size = +document.querySelector("input[name='sc']:checked").value;
+		count = +document.querySelector("input[name='count']").value;
+		productId = +this.getAttribute('data-product')
+
+		let data = JSON.stringify({
+			size,
+			productId,
+			count
+		});
+
+		fetch('http://localhost:3000/api/addToBucket', {
 			method: 'POST',
-			data: {
-				count: 1,
-				id: 56
+			body: data,
+			headers:{
+				'Content-Type': 'application/json'
 			}
+		}).then(res=>res.json()).then(res=>{
+			console.log(res)
+		}).catch(e=>{
+			alert(e)
 		})
 	})
 </script>

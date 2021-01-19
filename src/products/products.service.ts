@@ -5,6 +5,14 @@ import { InjectModel } from '@nestjs/mongoose';
 import { СreateProductDto } from './dto/create-product.dto';
 import { CategoryService } from '../category/category.service';
 
+type matchType = {
+  have: boolean;
+  productId: {
+    $ne: number;
+  };
+  category?: string;
+};
+
 @Injectable()
 export class ProductsService {
   constructor(
@@ -57,16 +65,21 @@ export class ProductsService {
     });
   }
 
-  getRecommendation(category, productId = 0) {
+  getRecommendation(category?, productId = 0) {
+    const match: matchType = {
+      have: true,
+      productId: {
+        $ne: productId,
+      },
+    };
+
+    if (category) {
+      match.category = category;
+    }
+
     return this.productModel.aggregate([
       {
-        $match: {
-          category,
-          have: true,
-          productId: {
-            $ne: productId,
-          },
-        },
+        $match: match,
       },
       {
         $sample: { size: 10 },

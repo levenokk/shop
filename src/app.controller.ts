@@ -13,11 +13,12 @@ export class AppController {
 
   @Get()
   @Render('index')
-  async render() {
+  async root() {
     return {
       latestProducts: await this.productsService.getLatestProducts(0, 10),
       categories: await this.categoryService.getCategories(),
       products: await this.productsService.getProducts('', 0, 8),
+      title: 'Divisima',
     };
   }
 }

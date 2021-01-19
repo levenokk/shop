@@ -18,6 +18,7 @@ import { TimeoutInterceptor } from './interceptors/timeout.interceptor';
 import { BadValidationException } from './errors/bad-validation.exception';
 import { CategoryService } from '../category/category.service';
 import { CreateCategoryDto } from '../category/dto/create-category.dto';
+import { AddBucketDto } from './dto/add-bucket.dto';
 
 @Controller('api')
 @UseInterceptors(TimeoutInterceptor)
@@ -79,22 +80,37 @@ export class ApiController {
     return this.categoryService.getCategories();
   }
 
-  @Post('/addToBacket')
+  @Post('addToBucket')
+  @UseInterceptors(new TransformInterceptor())
   @UseFilters(new BadValidationException())
-  async addToBacket(
+  async addToBucket(
     @Session() session: Record<string, any>,
-    @Body() id: number,
-    @Body() count: number,
+    @Body(new ValidationPipe()) body: AddBucketDto,
   ) {
+    const { productId, size, count } = body;
+
     if (!session.items) {
       session.items = {};
     }
 
-    await session.items.push({ id, count });
+    if (session.items[productId]) {
+      session.items[productId] = {
+        ...session.items[productId],
+        [size]: {
+          size,
+          count,
+        },
+      };
+    } else {
+      session.items[productId] = {
+        [size]: {
+          size,
+          count,
+        },
+      };
+    }
 
-    return {
-      ok: true,
-    };
+    return session.items;
   }
 
   @Post('createCategory')
