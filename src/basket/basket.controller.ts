@@ -16,9 +16,11 @@ export class BasketController {
       sessionItems = Object.keys(session.items).length;
     }
 
-    const viewedItems = session.viewsItems || [];
-    console.log(await this.productService.getViewedproducts(viewedItems, 8));
-
+    const viewedItems =
+      session.viewsItems.filter(
+        (item) => !Object.keys(session.items).includes(item.toString()),
+      ) || [];
+    // доделать корзину(добавления, удаления товаров)
     return {
       basket: session.items ? sessionItems : 0,
       title: 'Divisima | корзина',
