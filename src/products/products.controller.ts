@@ -5,7 +5,8 @@ import {
   ParseIntPipe,
   Query,
   Req,
-  Res, Session,
+  Res,
+  Session,
   UseFilters,
 } from '@nestjs/common';
 import { ProductsService } from './products.service';
@@ -45,6 +46,12 @@ export class ProductsController {
       category,
       productId,
     );
+    if (!session.viewsItems) {
+      session.viewsItems = [];
+    }
+    if (session.viewsItems.indexOf(productId) === -1) {
+      session.viewsItems.push(productId);
+    }
 
     return res.render('product', {
       product,

@@ -1,5 +1,4 @@
 import { Controller, Get, Render, Session } from '@nestjs/common';
-import { controllerType } from '../app.controller';
 import { ProductsService } from '../products/products.service';
 
 @Controller('basket')
@@ -8,13 +7,28 @@ export class BasketController {
 
   @Get()
   @Render('cart')
-  async root(@Session() session: Record<string, any>): Promise<controllerType> {
-    await this.productService.getBasketItems(
-      session.items,
-    );
+  async root(@Session() session: Record<string, any>) {
+    let sessionItems;
+
+    if (!session.items) {
+      sessionItems = 0;
+    } else {
+      sessionItems = Object.keys(session.items).length;
+    }
+
+    const viewedItems = session.viewsItems || [];
+    console.log(await this.productService.getViewedproducts(viewedItems, 8));
+
     return {
-      basket: session.items ? Object.keys(session.items).length : 0,
+      basket: session.items ? sessionItems : 0,
       title: 'Divisima | корзина',
+      items: sessionItems
+        ? await this.productService.getBasketItems(session.items)
+        : [],
+      recommendation: await this.productService.getViewedproducts(
+        viewedItems,
+        8,
+      ),
     };
   }
 }

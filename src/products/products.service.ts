@@ -23,7 +23,9 @@ type backetSessionType = {
 };
 
 interface productWithId extends Product {
-  productId: number;
+  productId?: number;
+  size?: number;
+  count?: number;
 }
 
 @Injectable()
@@ -78,7 +80,7 @@ export class ProductsService {
     });
   }
 
-  getRecommendation(category?, productId = 0) {
+  getRecommendation(category?, productId = 0, size = 10) {
     const match: matchType = {
       have: true,
       productId: {
@@ -95,7 +97,7 @@ export class ProductsService {
         $match: match,
       },
       {
-        $sample: { size: 10 },
+        $sample: { size },
       },
     ]);
   }
@@ -127,13 +129,41 @@ export class ProductsService {
           },
         ],
       })
-      .select('title price productId');
+      .select('title price productId category');
 
-    const concatItems = Object.entries(sessionItems).map((item) => {
-      const product = items.find((i: productWithId) => i.productId === +item[0]);
-      console.log(item)
+    const filteredItems = [];
+
+    Object.entries(sessionItems).forEach((item) => {
+      const id = +item[0];
+      for (const i of Object.values(item[1])) {
+        items.forEach((el: productWithId) => {
+          if (el.productId === id) {
+            filteredItems.push({
+              productId: el.productId,
+              count: i.count,
+              title: el.title,
+              size: i.size,
+              price: el.price,
+              category: el.category,
+            });
+          }
+        });
+      }
     });
 
-    return;
+    return filteredItems;
+  }
+
+  getViewedproducts(products: number[], size = 10) {
+    const match = {
+      have: true,
+      $or: [
+        {
+          productId: products,
+        },
+      ],
+    };
+
+    return this.productModel.find(match);
   }
 }

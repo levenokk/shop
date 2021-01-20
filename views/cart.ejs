@@ -4,10 +4,10 @@
 <!-- Page info -->
 	<div class="page-top-info">
 		<div class="container">
-			<h4>Your cart</h4>
+			<h4>Корзина</h4>
 			<div class="site-pagination">
-				<a href="">Home</a> /
-				<a href="">Your cart</a>
+				<a href="/">Главная</a> /
+				<a href="/cart">Корзина</a>
 			</div>
 		</div>
 	</div>
@@ -20,77 +20,46 @@
 			<div class="row">
 				<div class="col-lg-8">
 					<div class="cart-table">
-						<h3>Your Cart</h3>
+						<h3>Корзина</h3>
 						<div class="cart-table-warp">
 							<table>
 							<thead>
 								<tr>
-									<th class="product-th">Product</th>
-									<th class="quy-th">Quantity</th>
-									<th class="size-th">SizeSize</th>
-									<th class="total-th">Price</th>
+									<th class="product-th">Продукт</th>
+									<th class="quy-th">Количество</th>
+									<th class="size-th">Размер</th>
+									<th class="total-th">Цена</th>
 								</tr>
 							</thead>
 							<tbody>
+							<% var totalPrice = 0; %>
+							<% items.forEach(function(item){ %>
 								<tr>
 									<td class="product-col">
-										<img src="../public/img/cart/1.jpg" alt="">
-										<div class="pc-title">
-											<h4>Animal Print Dress</h4>
-											<p>$45.90</p>
-										</div>
+										<img src="/img/cart/1.jpg" alt="">
+											<div class="pc-title">
+												<h4><a href="/product?product=<%= item.productId %>&category=<%= item.category %>"><%= item.title %></a></h4>
+												<p>$<%= item.price %></p>
+											</div>
 									</td>
 									<td class="quy-col">
 										<div class="quantity">
-					                        <div class="pro-qty">
-												<input type="text" value="1">
+											<div class="pro-qty">
+												<input type="text" value="<%= item.count %>">
 											</div>
-                    					</div>
-									</td>
-									<td class="size-col"><h4>Size M</h4></td>
-									<td class="total-col"><h4>$45.90</h4></td>
-								</tr>
-								<tr>
-									<td class="product-col">
-										<img src="../public/img/cart/2.jpg" alt="">
-										<div class="pc-title">
-											<h4>Ruffle Pink Top</h4>
-											<p>$45.90</p>
 										</div>
 									</td>
-									<td class="quy-col">
-										<div class="quantity">
-					                        <div class="pro-qty">
-												<input type="text" value="1">
-											</div>
-                    					</div>
-									</td>
-									<td class="size-col"><h4>Size M</h4></td>
-									<td class="total-col"><h4>$45.90</h4></td>
+									<td class="total-col"><h4><%= item.size %></h4></td>
+									<td class="total-col"><h4>$<%= item.price * item.count %></h4></td>
+									<% totalPrice+=item.price * item.count %>
 								</tr>
-								<tr>
-									<td class="product-col">
-										<img src="../public/img/cart/3.jpg" alt="">
-										<div class="pc-title">
-											<h4>Skinny Jeans</h4>
-											<p>$45.90</p>
-										</div>
-									</td>
-									<td class="quy-col">
-										<div class="quantity">
-					                        <div class="pro-qty">
-												<input type="text" value="1">
-											</div>
-                    					</div>
-									</td>
-									<td class="size-col"><h4>Size M</h4></td>
-									<td class="total-col"><h4>$45.90</h4></td>
-								</tr>
+
+							<% }) %>
 							</tbody>
 						</table>
 						</div>
 						<div class="total-cost">
-							<h6>Total <span>$99.90</span></h6>
+							<h6>Общая цена <span>$<%= totalPrice %></span></h6>
 						</div>
 					</div>
 				</div>
@@ -111,70 +80,30 @@
 	<section class="related-product-section">
 		<div class="container">
 			<div class="section-title text-uppercase">
-				<h2>Continue Shopping</h2>
+				<h2>Рекомендации</h2>
 			</div>
 			<div class="row">
-				<div class="col-lg-3 col-sm-6">
-					<div class="product-item">
-						<div class="pi-pic">
-							<div class="tag-new">New</div>
-							<img src="../public/img/product/2.jpg" alt="">
-							<div class="pi-links">
-								<a href="#" class="add-card"><i class="flaticon-bag"></i><span>ADD TO CART</span></a>
-								<a href="#" class="wishlist-btn"><i class="flaticon-heart"></i></a>
+				<% recommendation.forEach(function(item) { %>
+
+					<div class="col-lg-3 col-sm-6">
+						<div class="product-item">
+							<div class="pi-pic">
+								<div class="tag-new">New</div>
+								<img src="<%= item.activeImage.src %>" alt="<% item.activeImage.alt %>">
+									<div class="pi-links">
+										<a href="#" class="add-card"><i class="flaticon-bag"></i><span>ADD TO CART</span></a>
+										<a href="#" class="wishlist-btn"><i class="flaticon-heart"></i></a>
+									</div>
+							</div>
+							<div class="pi-text">
+								<h6>$<%= item.price %></h6>
+								<p><a href="/product?product=<%= item.productId %>&category=<%= item.category %>"><%= item.title %></a></p>
 							</div>
 						</div>
-						<div class="pi-text">
-							<h6>$35,00</h6>
-							<p>Black and White Stripes Dress</p>
-						</div>
 					</div>
-				</div>
-				<div class="col-lg-3 col-sm-6">
-					<div class="product-item">
-						<div class="pi-pic">
-							<img src="../public/img/product/5.jpg" alt="">
-							<div class="pi-links">
-								<a href="#" class="add-card"><i class="flaticon-bag"></i><span>ADD TO CART</span></a>
-								<a href="#" class="wishlist-btn"><i class="flaticon-heart"></i></a>
-							</div>
-						</div>
-						<div class="pi-text">
-							<h6>$35,00</h6>
-							<p>Flamboyant Pink Top </p>
-						</div>
-					</div>
-				</div>
-				<div class="col-lg-3 col-sm-6">
-					<div class="product-item">
-						<div class="pi-pic">
-							<img src="../public/img/product/9.jpg" alt="">
-							<div class="pi-links">
-								<a href="#" class="add-card"><i class="flaticon-bag"></i><span>ADD TO CART</span></a>
-								<a href="#" class="wishlist-btn"><i class="flaticon-heart"></i></a>
-							</div>
-						</div>
-						<div class="pi-text">
-							<h6>$35,00</h6>
-							<p>Flamboyant Pink Top </p>
-						</div>
-					</div>
-				</div>
-				<div class="col-lg-3 col-sm-6">
-					<div class="product-item">
-						<div class="pi-pic">
-							<img src="../public/img/product/1.jpg" alt="">
-							<div class="pi-links">
-								<a href="#" class="add-card"><i class="flaticon-bag"></i><span>ADD TO CART</span></a>
-								<a href="#" class="wishlist-btn"><i class="flaticon-heart"></i></a>
-							</div>
-						</div>
-						<div class="pi-text">
-							<h6>$35,00</h6>
-							<p>Flamboyant Pink Top </p>
-						</div>
-					</div>
-				</div>
+
+				<% }) %>
+
 			</div>
 		</div>
 	</section>
