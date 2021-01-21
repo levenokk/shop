@@ -22,6 +22,7 @@ import { CreateCategoryDto } from '../category/dto/create-category.dto';
 import { AddBucketDto } from './dto/add-bucket.dto';
 import { SessionInterceptor } from '../session/session.interceptor';
 import { RemoveItemDto } from './dto/remove-item.dto';
+import { ChangeCountDto } from './dto/change-count.dto';
 
 @Controller('api')
 @UseInterceptors(TimeoutInterceptor)
@@ -143,6 +144,29 @@ export class ApiController {
     const { productId, size } = body;
 
     delete session.items[`${productId}:${size}`];
+    return true;
+  }
+
+  @Put('basket/changeCount')
+  @UseInterceptors(new TransformInterceptor())
+  @UseInterceptors(SessionInterceptor)
+  @UseFilters(new BadValidationException())
+  async addCount(
+    @Body(new ValidationPipe()) body: ChangeCountDto,
+    @Session() session: Record<string, any>,
+  ) {
+    const { productId, size, count } = body;
+    console.log(productId, size)
+
+    if (!session.items[`${productId}:${size}`]) {
+      return false;
+    }
+
+    session.items[`${productId}:${size}`] = {
+      ...session.items[`${productId}:${size}`],
+      count,
+    };
+
     return true;
   }
 }

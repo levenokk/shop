@@ -158,6 +158,6 @@ export class ProductsService {
       ],
     };
 
-    return this.productModel.find(match).limit(size);
+    return this.productModel.find(match);
   }
 }

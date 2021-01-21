@@ -48,9 +48,9 @@
                                     <div class="quantity">
                                         <div class="pro-qty">
                                             <span class="dec qtybtn"
-                                                  @click='item.count <= 0 ? 0 : item.count--'>-</span>
+                                                  @click='changeCount(item.productId,item.size,item.count <= 0 ? 0 : item.count - 1)'>-</span>
                                             <input type="text" readonly v-model="item.count">
-                                            <span class="inc qtybtn" @click='item.count++'>+</span>
+                                            <span class="inc qtybtn" @click='changeCount(item.productId,item.size,item.count + 1)'>+</span>
                                         </div>
                                     </div>
                                 </td>
@@ -81,11 +81,11 @@
 <!-- cart section end -->
 
 <!-- Related product section -->
-<% if(recommendation.lenght) { %>
+<% if(recommendation.length) { %>
     <section class="related-product-section">
         <div class="container">
             <div class="section-title text-uppercase">
-                <h2>Рекомендации</h2>
+                <h2>Ранее просмотренные товары</h2>
             </div>
             <div class="row">
                 <% recommendation.forEach(function(item) { %>
@@ -160,6 +160,30 @@
                     alert(e.message)
                 }
             },
+            changeCount: async function(productId, size, count) {
+                const res = await fetch('api/basket/changeCount', {
+                    body: JSON.stringify({
+                      productId,
+                      size,
+                      count
+                    }),
+                    headers:{
+                        'Content-Type': 'application/json'
+                    },
+                    method: "PUT"
+                })
+
+                const { data } = await res.json()
+
+                if(!data){
+                    alert('Проищошла не известная ошибка')
+                } else{
+                    const res = await fetch('/api/basket');
+                    const { data } = await res.json();
+
+                    this.items = data;
+                }
+            }
         }
         ,
         computed: {

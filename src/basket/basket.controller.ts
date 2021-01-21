@@ -7,6 +7,7 @@ import {
 } from '@nestjs/common';
 import { ProductsService } from '../products/products.service';
 import { SessionInterceptor } from '../session/session.interceptor';
+import * as _ from 'lodash';
 
 @Controller('basket')
 export class BasketController {
@@ -17,8 +18,9 @@ export class BasketController {
   @Render('cart')
   async root(@Session() session: Record<string, any>) {
     const viewedItems =
-      session.viewsItems.filter(
-        (item) => !Object.keys(session.items).includes(item.toString()),
+      _.without(
+        session.viewsItems,
+        ...Object.values(session.items).map((item: any) => item.productId),
       ) || [];
 
     return {

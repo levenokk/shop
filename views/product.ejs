@@ -50,8 +50,8 @@
 						<p>Размер</p>
 						<% product.sizes.forEach(function(size, index) { %>
 							<div class="sc-item">
-								<input type="radio" name="sc" value="<%= size %>" <%- index === 0 && 'checked' %> id="size-<%= size %>">
-								<label for="size-<%= size %>"><%= size %></label>
+								<input type="radio" name="sc" value="<%= size.size %>" <%- index === 0 && 'checked' %> id="size-<%= size.size %>">
+								<label for="size-<%= size.size %>"><%= size.size %></label>
 							</div>
 
 						<%}) %>

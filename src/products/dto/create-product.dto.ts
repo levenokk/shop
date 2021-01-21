@@ -9,6 +9,7 @@ import {
   ArrayMinSize,
   IsArray,
   IsNumber,
+  Min,
 } from 'class-validator';
 import { Type } from 'class-transformer';
 
@@ -20,6 +21,18 @@ export class Image {
   @IsString()
   @IsNotEmpty()
   alt: string;
+}
+
+export class Size {
+  @IsNumber()
+  @IsNotEmpty()
+  @Min(1)
+  count: number;
+
+  @IsNumber()
+  @Min(1)
+  @IsNotEmpty()
+  size: number;
 }
 
 export class СreateProductDto {
@@ -57,9 +70,12 @@ export class СreateProductDto {
   @IsOptional()
   newProduct: boolean;
 
-  @IsNumber({}, { each: true })
+  @IsArray()
+  @ValidateNested({ each: true })
   @ArrayMinSize(1)
-  sizes: number[];
+  @ValidateNested()
+  @Type(() => Size)
+  sizes: Size[];
 
   @IsString()
   @IsNotEmpty()

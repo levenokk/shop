@@ -4,11 +4,6 @@ import { Category } from '../../category/schemas/category-schema';
 
 export type ProductDocument = Product & Document;
 
-type ImageType ={
-  src: string;
-  alt: string;
-}
-
 @Schema()
 export class Product {
   @Prop()
@@ -30,8 +25,8 @@ export class Product {
 
   @Prop(
     raw({
-      src: { type: String },
-      alt: { type: String },
+      src: { type: String, required: true },
+      alt: { type: String, required: true },
     }),
   )
   activeImage: Record<string, any>;
@@ -40,9 +35,11 @@ export class Product {
     raw({
       src: {
         type: String,
+        required: true,
       },
       alt: {
         type: String,
+        required: true,
       },
     }),
   )
@@ -54,8 +51,19 @@ export class Product {
   @Prop({ default: 0 })
   like: number;
 
-  @Prop({ required: true })
-  sizes: number[];
+  @Prop([
+    raw({
+      size: {
+        type: Number,
+        required: true,
+      },
+      count: {
+        type: Number,
+        required: true,
+      },
+    }),
+  ])
+  sizes: Record<string, any>[];
 
   @Prop({ required: true })
   information: string;
