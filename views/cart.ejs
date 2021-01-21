@@ -2,121 +2,158 @@
 
 
 <!-- Page info -->
-	<div class="page-top-info">
-		<div class="container">
-			<h4>Корзина</h4>
-			<div class="site-pagination">
-				<a href="/">Главная</a> /
-				<a href="/cart">Корзина</a>
-			</div>
-		</div>
-	</div>
-	<!-- Page info end -->
+<div class="page-top-info">
+    <div class="container">
+        <h4>Корзина</h4>
+        <div class="site-pagination">
+            <a href="/">Главная</a> /
+            <a href="/cart">Корзина</a>
+        </div>
+    </div>
+</div>
+<!-- Page info end -->
 
 
-	<!-- cart section end -->
-	<section class="cart-section spad" id='cart'>
-		<div class="container">
-			<div class="row">
-				<div class="col-lg-8">
-					<div class="cart-table">
-						<h3>Корзина</h3>
-						<div class="cart-table-warp">
-							<table>
-							<thead>
-								<tr>
-									<th class="product-th">Продукт</th>
-									<th class="quy-th">Количество</th>
-									<th class="size-th">Размер</th>
-									<th class="total-th">Цена</th>
-								</tr>
-							</thead>
-							<tbody>
-							<% var totalPrice = 0; %>
-							<% items.forEach(function(item){ %>
-								<tr>
-									<td class="product-col">
-										<img src="/img/cart/1.jpg" alt="">
-											<div class="pc-title">
-												<h4><a href="/product?product=<%= item.productId %>&category=<%= item.category %>"><%= item.title %></a></h4>
-												<p>$<%= item.price %></p>
-											</div>
-									</td>
-									<td class="quy-col">
-										<div class="quantity">
-											<div class="pro-qty">
-												<input type="text" value="<%= item.count %>">
-											</div>
-										</div>
-									</td>
-									<td class="total-col"><h4><%= item.size %></h4></td>
-									<td class="total-col"><h4>$<%= item.price * item.count %></h4></td>
-									<% totalPrice+=item.price * item.count %>
-								</tr>
+<!-- cart section end -->
+<section class="cart-section spad" id='cart'>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8">
+                <div class="cart-table">
+                    <h3>Корзина</h3>
+                    <div class="cart-table-warp">
+                        <table>
+                            <thead>
+                            <tr>
+                                <th class="product-th">Продукт</th>
+                                <th class="quy-th">Количество</th>
+                                <th class="size-th">Размер</th>
+                                <th class="total-th">Цена</th>
+                                <th class="total-th"></th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr v-for='item in products' :key='item.productId'>
+                                <td class="product-col">
+                                    <img src="/img/cart/1.jpg" alt="">
+                                    <div class="pc-title">
+                                        <h4>
+                                            <a :href="'/product?product=' + item.productId + '&category='+ item.category">{{ item.title }}</a>
+                                        </h4>
+                                        <p>${{ item.price }}</p>
+                                    </div>
+                                </td>
+                                <td class="quy-col">
+                                    <div class="quantity">
+                                        <div class="pro-qty">
+                                            <span class="dec qtybtn" @click='item.count <= 0 ? 0 : item.count--'>-</span>
+                                            <input type="text" readonly v-model="item.count">
+                                            <span class="inc qtybtn" @click='item.count++'>+</span>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="total-col"><h4>{{ item.size }}</h4></td>
+                                <td class="total-col"><h4>${{ item.price * item.count }}</h4></td>
+                                <td class="total-col"><a href='#' style='color:red'>удалить</a></td>
+                            </tr>
 
-							<% }) %>
-							</tbody>
-						</table>
-						</div>
-						<div class="total-cost">
-							<h6>Общая цена <span>$<%= totalPrice %></span></h6>
-						</div>
-					</div>
-				</div>
-				<div class="col-lg-4 card-right">
-					<form class="promo-code-form">
-						<input type="text" placeholder="Enter promo code">
-						<button>Submit</button>
-					</form>
-					<a href="" class="site-btn">Proceed to checkout</a>
-					<a href="" class="site-btn sb-dark">Continue shopping</a>
-				</div>
-			</div>
-		</div>
-	</section>
-	<!-- cart section end -->
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="total-cost">
+                        <h6>Общая цена <span>${{ totalPrice }}</span></h6>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4 card-right">
+                <form class="promo-code-form">
+                    <input type="text" placeholder="Enter promo code">
+                    <button>Submit</button>
+                </form>
+                <a href="" class="site-btn">Оформить заказ</a>
+                <a href="/" class="site-btn sb-dark">Продолжить покупки</a>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- cart section end -->
 
-	<!-- Related product section -->
-	<section class="related-product-section">
-		<div class="container">
-			<div class="section-title text-uppercase">
-				<h2>Рекомендации</h2>
-			</div>
-			<div class="row">
-				<% recommendation.forEach(function(item) { %>
+<!-- Related product section -->
+<% if(recommendation.lenght) { %>
+    <section class="related-product-section">
+        <div class="container">
+            <div class="section-title text-uppercase">
+                <h2>Рекомендации</h2>
+            </div>
+            <div class="row">
+                <% recommendation.forEach(function(item) { %>
 
-					<div class="col-lg-3 col-sm-6">
-						<div class="product-item">
-							<div class="pi-pic">
-								<div class="tag-new">New</div>
-								<img src="<%= item.activeImage.src %>" alt="<% item.activeImage.alt %>">
-									<div class="pi-links">
-										<a href="#" class="add-card"><i class="flaticon-bag"></i><span>ADD TO CART</span></a>
-										<a href="#" class="wishlist-btn"><i class="flaticon-heart"></i></a>
-									</div>
-							</div>
-							<div class="pi-text">
-								<h6>$<%= item.price %></h6>
-								<p><a href="/product?product=<%= item.productId %>&category=<%= item.category %>"><%= item.title %></a></p>
-							</div>
-						</div>
-					</div>
+                    <div class="col-lg-3 col-sm-6">
+                        <div class="product-item">
+                            <div class="pi-pic">
+                                <div class="tag-new">New</div>
+                                <img src="<%= item.activeImage.src %>" alt="<% item.activeImage.alt %>">
+                                <div class="pi-links">
+                                    <a href="#" class="add-card"><i
+                                                class="flaticon-bag"></i><span>ADD TO CART</span></a>
+                                    <a href="#" class="wishlist-btn"><i class="flaticon-heart"></i></a>
+                                </div>
+                            </div>
+                            <div class="pi-text">
+                                <h6>$<%= item.price %></h6>
+                                <p>
+                                    <a href="/product?product=<%= item.productId %>&category=<%= item.category %>"><%= item.title %></a>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
 
-				<% }) %>
+                <% }) %>
 
-			</div>
-		</div>
-	</section>
-	<!-- Related product section end -->
+            </div>
+        </div>
+    </section>
+    <!-- Related product section end -->
+<% } %>
 
 <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
 <script>
-	new Vue({
-		el: "#cart",
-		data: {
-			items: <%- items %>
-		}
-	})
+    new Vue({
+        el: '#cart',
+        data: {
+            items: [],
+            totalPrice: 0,
+        },
+        mounted: async function() {
+            try {
+                const res = await fetch('/api/basket');
+                const { data } = await res.json();
+
+                this.items = data;
+
+            } catch (e) {
+                alert(e.message);
+            }
+
+        },
+        methods: {
+            removeItem: function(id) {
+
+            }
+        }
+        ,
+        computed: {
+            products: function() {
+                const $this = this;
+                this.totalPrice = 0;
+                return this.items.map(item => {
+                    $this.totalPrice += item.price * item.count;
+                    return item;
+                });
+            },
+        },
+
+    });
 </script>
 
 <%- include('./components/footer.ejs') %>

@@ -4,14 +4,14 @@ import {
   Get,
   ParseIntPipe,
   Query,
-  Req,
   Res,
   Session,
-  UseFilters,
+  UseFilters, UseInterceptors,
 } from '@nestjs/common';
 import { ProductsService } from './products.service';
 import { Response } from 'express';
 import { BadRequestExceptionFilter } from './filters/bad-request-exception.filter';
+import { SessionInterceptor } from '../session/session.interceptor';
 
 @Controller()
 export class ProductsController {
@@ -19,6 +19,7 @@ export class ProductsController {
 
   @Get('product')
   @UseFilters(new BadRequestExceptionFilter())
+  @UseInterceptors(SessionInterceptor)
   async root(
     @Query('product', new DefaultValuePipe(0), new ParseIntPipe())
     productId: number,
@@ -29,7 +30,7 @@ export class ProductsController {
     if (!productId) {
       return res.render('404', {
         title: 'Divisima | запись не найдена',
-        basket: session.items ? Object.keys(session.items).length : 0,
+        basket: Object.keys(session.items).length,
       });
     }
 
@@ -38,7 +39,7 @@ export class ProductsController {
     if (!product) {
       return res.render('404', {
         title: 'Divisima | запись не найдена',
-        basket: session.items ? Object.keys(session.items).length : 0,
+        basket: Object.keys(session.items).length,
       });
     }
 
@@ -46,9 +47,7 @@ export class ProductsController {
       category,
       productId,
     );
-    if (!session.viewsItems) {
-      session.viewsItems = [];
-    }
+
     if (session.viewsItems.indexOf(productId) === -1) {
       session.viewsItems.push(productId);
     }
@@ -57,7 +56,7 @@ export class ProductsController {
       product,
       recommendation,
       title: 'Divisima | ' + product.title,
-      basket: session.items ? Object.keys(session.items).length : 0,
+      basket: Object.keys(session.items).length,
     });
   }
 }

@@ -219,7 +219,7 @@ new Vue({
 		},
 	},
 	mounted: async function(){
-		const posts =await fetch('http://localhost:3000/api/products')
+		const posts =await fetch('/api/products')
 		const {data} = await  posts.json()
 
 		if(data.length !== 8){

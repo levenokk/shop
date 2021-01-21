@@ -5,6 +5,7 @@ import {
   Get,
   ParseIntPipe,
   Post,
+  Put,
   Query,
   Session,
   UseFilters,
@@ -19,6 +20,9 @@ import { BadValidationException } from './errors/bad-validation.exception';
 import { CategoryService } from '../category/category.service';
 import { CreateCategoryDto } from '../category/dto/create-category.dto';
 import { AddBucketDto } from './dto/add-bucket.dto';
+import { SessionInterceptor } from '../session/session.interceptor';
+import { RemoveItemDto } from './dto/remove-item.dto';
+import session from 'express-session';
 
 @Controller('api')
 @UseInterceptors(TimeoutInterceptor)
@@ -124,5 +128,27 @@ export class ApiController {
     @Body(new ValidationPipe()) createCategoryDto: CreateCategoryDto,
   ) {
     return this.categoryService.createCategory(createCategoryDto);
+  }
+
+  @Get('basket')
+  @UseInterceptors(new TransformInterceptor())
+  @UseInterceptors(SessionInterceptor)
+  async getBasketItems(@Session() session: Record<string, any>) {
+    return Object.values(session.items).length
+      ? await this.productsService.getBasketItems(session.items)
+      : [];
+  }
+
+  @Put('basket/removeItem')
+  @UseInterceptors(new TransformInterceptor())
+  @UseInterceptors(SessionInterceptor)
+  @UseFilters(new BadValidationException())
+  async removeBasketItem(
+    @Body(new ValidationPipe()) body: RemoveItemDto,
+    @Session() session: Record<string, any>,
+  ) {
+    const items = session.items;
+    console.log(items);
+    return [];
   }
 }
