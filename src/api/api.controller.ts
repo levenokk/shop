@@ -22,7 +22,6 @@ import { CreateCategoryDto } from '../category/dto/create-category.dto';
 import { AddBucketDto } from './dto/add-bucket.dto';
 import { SessionInterceptor } from '../session/session.interceptor';
 import { RemoveItemDto } from './dto/remove-item.dto';
-import session from 'express-session';
 
 @Controller('api')
 @UseInterceptors(TimeoutInterceptor)
@@ -93,25 +92,19 @@ export class ApiController {
   ) {
     const { productId, size, count } = body;
     let isNew = true;
-    if (!session.items) {
-      session.items = {};
-    }
 
-    if (session.items[productId]) {
+    if (session.items[`${productId}:${size}`]) {
       isNew = false;
-      session.items[productId] = {
-        ...session.items[productId],
-        [size]: {
-          size,
-          count,
-        },
+      session.items[`${productId}:${size}`] = {
+        size,
+        count,
+        productId,
       };
     } else {
-      session.items[productId] = {
-        [size]: {
-          size,
-          count,
-        },
+      session.items[`${productId}:${size}`] = {
+        productId,
+        size,
+        count,
       };
     }
 
@@ -147,8 +140,9 @@ export class ApiController {
     @Body(new ValidationPipe()) body: RemoveItemDto,
     @Session() session: Record<string, any>,
   ) {
-    const items = session.items;
-    console.log(items);
-    return [];
+    const { productId, size } = body;
+
+    delete session.items[`${productId}:${size}`];
+    return true;
   }
 }

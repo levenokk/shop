@@ -14,18 +14,13 @@ type matchType = {
 };
 
 type backetSessionType = {
-  [key: number]: {
-    [key: number]: {
-      count: number;
-      size: number;
-    };
-  };
+  productId: number;
+  size: number;
+  count: number;
 };
 
-interface productWithId extends Product {
+interface filteredInterface extends Product {
   productId?: number;
-  size?: number;
-  count?: number;
 }
 
 @Injectable()
@@ -119,8 +114,10 @@ export class ProductsService {
     return product;
   }
 
-  async getBasketItems(sessionItems: backetSessionType) {
-    const products = Object.keys(sessionItems).map((item) => +item);
+  async getBasketItems(sessionItems) {
+    const products: number[] = Object.values(sessionItems).map(
+      (item: backetSessionType) => item.productId,
+    );
     const items: Product[] = await this.productModel
       .find({
         $or: [
@@ -129,27 +126,24 @@ export class ProductsService {
           },
         ],
       })
-      .select('title price productId category');
+      .select('title price productId category backetImg');
 
-    const filteredItems = [];
+    const filteredItems = Object.values(sessionItems).map(
+      (el: backetSessionType) => {
+        const item: filteredInterface = items.find(
+          (e: filteredInterface) => e.productId === el.productId,
+        );
 
-    Object.entries(sessionItems).forEach((item) => {
-      const id = +item[0];
-      for (const i of Object.values(item[1])) {
-        items.forEach((el: productWithId) => {
-          if (el.productId === id) {
-            filteredItems.push({
-              productId: el.productId,
-              count: i.count,
-              title: el.title,
-              size: i.size,
-              price: el.price,
-              category: el.category,
-            });
-          }
-        });
-      }
-    });
+        return {
+          price: item.price,
+          title: item.title,
+          size: el.size,
+          count: el.count,
+          productId: item.productId,
+          backetImg: item.backetImg,
+        };
+      },
+    );
 
     return filteredItems;
   }
@@ -164,6 +158,6 @@ export class ProductsService {
       ],
     };
 
-    return this.productModel.find(match);
+    return this.productModel.find(match).limit(size);
   }
 }

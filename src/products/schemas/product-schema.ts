@@ -4,6 +4,11 @@ import { Category } from '../../category/schemas/category-schema';
 
 export type ProductDocument = Product & Document;
 
+type ImageType ={
+  src: string;
+  alt: string;
+}
+
 @Schema()
 export class Product {
   @Prop()
@@ -30,6 +35,18 @@ export class Product {
     }),
   )
   activeImage: Record<string, any>;
+
+  @Prop(
+    raw({
+      src: {
+        type: String,
+      },
+      alt: {
+        type: String,
+      },
+    }),
+  )
+  backetImg: Record<string, any>;
 
   @Prop({ default: true })
   newProduct: boolean;

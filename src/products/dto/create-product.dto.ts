@@ -1,8 +1,6 @@
 import {
   IsString,
-  IsInt,
   IsNotEmpty,
-  IsMongoId,
   IsOptional,
   IsBoolean,
   ValidateNested,
@@ -10,7 +8,6 @@ import {
   IsNotEmptyObject,
   ArrayMinSize,
   IsArray,
-  isArray,
   IsNumber,
 } from 'class-validator';
 import { Type } from 'class-transformer';
@@ -50,6 +47,12 @@ export class СreateProductDto {
   @Type(() => Image)
   activeImage: Image;
 
+  @IsDefined()
+  @IsNotEmptyObject()
+  @ValidateNested()
+  @Type(() => Image)
+  backetImg: Image;
+
   @IsBoolean()
   @IsOptional()
   newProduct: boolean;
@@ -76,5 +79,5 @@ export class СreateProductDto {
 
   @IsBoolean()
   @IsOptional()
-  have: boolean
+  have: boolean;
 }

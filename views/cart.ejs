@@ -33,12 +33,13 @@
                             </tr>
                             </thead>
                             <tbody>
-                            <tr v-for='item in products' :key='item.productId'>
+                            <tr v-for='item in products' :key="item.size + '' +  item.productId ">
                                 <td class="product-col">
-                                    <img src="/img/cart/1.jpg" alt="">
+                                    <img :src="item.backetImg.src" :alt="item.backetImg.alt">
                                     <div class="pc-title">
                                         <h4>
-                                            <a :href="'/product?product=' + item.productId + '&category='+ item.category">{{ item.title }}</a>
+                                            <a :href="'/product?product=' + item.productId + '&category='+ item.category">{{ item.title
+                                                }}</a>
                                         </h4>
                                         <p>${{ item.price }}</p>
                                     </div>
@@ -46,7 +47,8 @@
                                 <td class="quy-col">
                                     <div class="quantity">
                                         <div class="pro-qty">
-                                            <span class="dec qtybtn" @click='item.count <= 0 ? 0 : item.count--'>-</span>
+                                            <span class="dec qtybtn"
+                                                  @click='item.count <= 0 ? 0 : item.count--'>-</span>
                                             <input type="text" readonly v-model="item.count">
                                             <span class="inc qtybtn" @click='item.count++'>+</span>
                                         </div>
@@ -54,7 +56,7 @@
                                 </td>
                                 <td class="total-col"><h4>{{ item.size }}</h4></td>
                                 <td class="total-col"><h4>${{ item.price * item.count }}</h4></td>
-                                <td class="total-col"><a href='#' style='color:red'>удалить</a></td>
+                                <td class="total-col"><a href='#' style='color:red' @click.prevent='removeItem(item.productId, item.size)'>удалить</a></td>
                             </tr>
 
                             </tbody>
@@ -137,9 +139,27 @@
 
         },
         methods: {
-            removeItem: function(id) {
+            removeItem: async function(productId, size) {
+                try{
+                    await fetch('api/basket/removeItem', {
+                        method: 'PUT',
+                        headers:{
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            productId,
+                            size,
+                        }),
+                    });
 
-            }
+                    const res = await fetch('/api/basket');
+                    const { data } = await res.json();
+
+                    this.items = data;
+                }catch(e){
+                    alert(e.message)
+                }
+            },
         }
         ,
         computed: {
