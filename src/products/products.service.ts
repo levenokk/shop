@@ -141,6 +141,7 @@ export class ProductsService {
           count: el.count,
           productId: item.productId,
           backetImg: item.backetImg,
+          category: item.category,
         };
       },
     );
