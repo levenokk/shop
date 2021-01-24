@@ -1,8 +1,4 @@
 import { Injectable } from '@nestjs/common';
 
-
 @Injectable()
-export class BasketService {
-
-
-}
+export class BasketService {}

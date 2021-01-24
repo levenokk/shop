@@ -110,8 +110,11 @@ export class ApiController {
     }
 
     return {
-      ok: true,
-      isNew,
+      data: {
+        ok: true,
+        isNew,
+        message: '',
+      },
     };
   }
 
@@ -163,10 +166,11 @@ export class ApiController {
         message: 'Произошла не известная ошибка',
       };
     }
+    // зарефакторить
     const product = await this.productsService.getProduct(productId);
-    const currentSize = product.sizes.find(item=>item.size === size)
-    const productCount = (product.sizes[0].count) + 1;
-  // дофиксить ограничения кол продуктов
+    const currentSize = product.sizes.find((item) => item.size === size);
+    const productCount = currentSize.count + 1;
+
     if (!product.sizes.length || productCount < count) {
       if (product.sizes[0].count < count) {
         session.items[`${productId}:${size}`] = {
