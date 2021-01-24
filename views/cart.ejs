@@ -175,8 +175,8 @@
 
                 const { data } = await res.json()
 
-                if(!data){
-                    alert('Проищошла не известная ошибка')
+                if(!data.ok){
+                    alert(data.message)
                 } else{
                     const res = await fetch('/api/basket');
                     const { data } = await res.json();

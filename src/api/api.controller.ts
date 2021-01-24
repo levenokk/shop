@@ -156,10 +156,28 @@ export class ApiController {
     @Session() session: Record<string, any>,
   ) {
     const { productId, size, count } = body;
-    console.log(productId, size)
 
     if (!session.items[`${productId}:${size}`]) {
-      return false;
+      return {
+        ok: false,
+        message: 'Произошла не известная ошибка',
+      };
+    }
+    const product = await this.productsService.getProduct(productId);
+    const currentSize = product.sizes.find(item=>item.size === size)
+    const productCount = (product.sizes[0].count) + 1;
+  // дофиксить ограничения кол продуктов
+    if (!product.sizes.length || productCount < count) {
+      if (product.sizes[0].count < count) {
+        session.items[`${productId}:${size}`] = {
+          ...session.items[`${productId}:${size}`],
+          count: productCount,
+        };
+      }
+      return {
+        ok: false,
+        message: 'Недостатньо товару для покупки',
+      };
     }
 
     session.items[`${productId}:${size}`] = {
@@ -167,6 +185,9 @@ export class ApiController {
       count,
     };
 
-    return true;
+    return {
+      ok: true,
+      message: 'Успех',
+    };
   }
 }

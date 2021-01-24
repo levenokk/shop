@@ -67,6 +67,7 @@ export class ProductsService {
     return this.productModel.findOne({ productId: id }).select(this.select);
   }
 
+
   getLatestProducts(from: number, to: number) {
     return this.productModel.find({ newProduct: true }, null, {
       limit: to,
