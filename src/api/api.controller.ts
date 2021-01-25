@@ -92,6 +92,43 @@ export class ApiController {
     @Body(new ValidationPipe()) body: AddBucketDto,
   ) {
     const { productId, size, count } = body;
+    const product = await this.productsService.getProduct(productId);
+    if (!product) {
+      return {
+        data: {
+          ok: false,
+          message: 'Запись не найдена',
+        },
+      };
+    }
+
+    const productSize = product.sizes.filter((item) => item.size === size);
+
+    if (!productSize.length) {
+      return {
+        data: {
+          ok: false,
+          message: 'Размер не найден',
+        },
+      };
+    }
+    const productCount = productSize[0].count + 1;
+
+    if (productCount < count) {
+      session.items[`${productId}:${size}`] = {
+        size,
+        count: productCount,
+        productId,
+      };
+  // дофиксить
+      return {
+        data: {
+          ok: false,
+          message: 'Не достаточно товара',
+        },
+      };
+    }
+
     let isNew = true;
 
     if (session.items[`${productId}:${size}`]) {
